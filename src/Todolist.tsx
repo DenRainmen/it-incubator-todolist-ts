@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // здесь типизация props
 export type TodolistType = {
@@ -20,6 +20,26 @@ export type TaskType = {
 
 export const Todolist: React.FC<TodolistType> =(props)=> {
 
+
+  let [btnName, setBtnName] = useState('all')
+  
+  const changeFilter=(btnName: string)=>{
+    setBtnName(btnName)
+  }
+
+  let filteredTasks ;
+
+  switch(btnName){
+    case 'active':
+      filteredTasks = props.tasks.filter(t => t.checkbox === false)
+      break
+    case 'completed':
+      filteredTasks = props.tasks.filter(t => t.checkbox === true)
+      break 
+    default:
+      filteredTasks = props.tasks  
+  }
+
   
   return (
     <div>
@@ -29,7 +49,7 @@ export const Todolist: React.FC<TodolistType> =(props)=> {
         <button>+</button>
       </div>
       <ul>
-        {props.tasks.map((t) => {
+        {filteredTasks.map((t) => {
           return (
             <li key={t.id}>
               <button onClick={()=>props.removeTask(t.id)}>X</button>
@@ -53,9 +73,9 @@ export const Todolist: React.FC<TodolistType> =(props)=> {
         </li> */}
       </ul>
       <div>
-        <button>All</button>
-        <button>Active</button>
-        <button>Completed</button>
+        <button onClick={()=>changeFilter('all')}>All</button>
+        <button onClick={()=>changeFilter('active')}>Active</button>
+        <button onClick={()=>changeFilter('completed')}>Completed</button>
       </div>
     </div>
   );
